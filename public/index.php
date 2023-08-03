@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 
 $size = '40px';
@@ -51,6 +52,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['item'])) {
 }
 
 $winNames = ['крестики', 'нолики'];
+$actionNames = ['Победили', 'Ходят'];
 $map = $_SESSION['map'];
 $player = $_SESSION['player'];
 ?>
@@ -60,11 +62,9 @@ $player = $_SESSION['player'];
     <button>Reset</button>
   </a>
 
-  <?php if($winRows) { ?>
-    <p>
-      Победили <?=$winNames[$map[$winRows[0]] -1] ?>
-    </p>
-  <?php } ?>
+  <p>
+    <?=$actionNames[$winRows == null]?> <?=$winNames[$player] ?>
+  </p>
 
   <form method="POST" style="display: grid; grid-template-columns: repeat(3, <?=$size?>); gap: 10px;">
     <?php foreach($map as $key => $value) { ?>
@@ -72,7 +72,7 @@ $player = $_SESSION['player'];
         <?php if($map[$key] > 0 || $winRows) { ?>disabled <?php } ?> 
         type="submit" 
         name="item" 
-        style="height: <?=$size?>"
+        style="height: <?=$size?>; <?php if($map[$key] == 0 && !$winRows) { ?> cursor: pointer; <?php } ?> <?php if($winRows && in_array($key, $winRows)) { ?> color: red; <?php } ?>"
         value="<?=$key?>"
       >
         <?php if($value === 1) { ?>
